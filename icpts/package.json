@@ -1,0 +1,33 @@
+{
+    "name": "icpts",
+    "version": "0.0.1",
+    "description": "TypeScript based library for icp.",
+    "type": "commonjs",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "npm run clean && ncc build index.ts -o dist --target es2017",
+        "clean": "rimraf ./dist"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Yyassin/icpjs.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Yyassin/icpjs/issues"
+    },
+    "homepage": "https://github.com/Yyassin/icpjs#readme",
+    "dependencies": {
+        "build": "^0.1.4",
+        "eigen": "^0.2.2",
+        "run": "^1.4.0"
+    },
+    "devDependencies": {
+        "@vercel/ncc": "^0.36.1",
+        "rimraf": "^5.0.1",
+        "tsc": "^2.0.4",
+        "typescript": "^5.1.3"
+    }
+}
