@@ -1,3 +1,5 @@
 import { matrixHelpers } from "./src/matrixHelpers";
+import { icp } from "./src/icp";
+export { matrixHelpers, icp };
 
-export { matrixHelpers };
+// ncc build index.ts -o dist --target es2017

@@ -4,13 +4,6 @@ import * as THREE from "three";
  * ICP utilities
  */
 
-export type ICPOptions = {
-    initialPose: number[];
-    maxIterations: number;
-    tolerance: number;
-};
-const IDENTITY = new THREE.Matrix4().transpose().elements;
-
 const fillMat = (matrix: THREE.Matrix4) => {
     //Translation
     const translation = new THREE.Vector3(1, 2, 3); // Set the translation values
@@ -28,14 +21,4 @@ const fillMat = (matrix: THREE.Matrix4) => {
     return matrix;
 };
 
-const pointTopointICP = (
-    source: Float32Array,
-    reference: Float32Array,
-    options: ICPOptions = { initialPose: IDENTITY, maxIterations: 250, tolerance: 1e-4 }
-) => {
-    console.log("Source: ", [...source.slice(0, 3)]);
-    console.log("Reference:", [...reference.slice(0, 3)]);
-    console.log("Options: ", options);
-};
-
-export { fillMat, pointTopointICP };
+export { fillMat };

@@ -6,7 +6,7 @@ import PointCloud from "./PointCloud";
 import { parsePCDFile } from "../util/pcdUtil";
 import { button, useControls } from "leva";
 import * as THREE from "three";
-import { pointTopointICP } from "../icp/icp";
+import { icp } from "icpts";
 
 /**
  * Primary Scene
@@ -24,15 +24,17 @@ const DemoScene = () => {
 
     const toggle = useRef(true);
     useControls("ICP", {
-        ["Point to Point"]: button(() => {
-            pointTopointICP(sourcePoints.current!, referencePoints.current!);
-            setMatrixSource(
-                toggle.current
-                    ? new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(Math.PI / 4, 0, 0))
-                    : new THREE.Matrix4()
-                          .makeRotationFromEuler(new THREE.Euler(Math.PI / 4, 0, 0))
-                          .invert()
-            );
+        ["Point to Point"]: button(async () => {
+            const mat = await icp.pointToPointICP(sourcePoints.current!, referencePoints.current!);
+            console.log(mat);
+            // setMatrixSource(
+            //     toggle.current
+            //         ? new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(Math.PI / 4, 0, 0))
+            //         : new THREE.Matrix4()
+            //               .makeRotationFromEuler(new THREE.Euler(Math.PI / 4, 0, 0))
+            //               .invert()
+            // );
+            setMatrixSource(new THREE.Matrix4().fromArray(mat));
             toggle.current = !toggle.current;
         })
     });
