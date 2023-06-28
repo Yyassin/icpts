@@ -5,6 +5,9 @@
     "type": "commonjs",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "browser": {
+        "fs": false
+    },
     "scripts": {
         "build": "npm run clean && tsc",
         "clean": "rimraf ./dist"
@@ -20,12 +23,11 @@
     },
     "homepage": "https://github.com/Yyassin/icpjs#readme",
     "dependencies": {
-        "@types/static-kdtree": "^1.0.0",
+        "@types/kd-tree-javascript": "^1.0.1",
         "build": "^0.1.4",
         "eigen": "^0.2.2",
-        "run": "^1.4.0",
-        "static-kdtree": "^1.0.2",
-        "svd-js": "^1.1.1"
+        "kd-tree-javascript": "^1.0.3",
+        "run": "^1.4.0"
     },
     "devDependencies": {
         "@vercel/ncc": "^0.36.1",

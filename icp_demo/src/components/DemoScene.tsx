@@ -14,6 +14,7 @@ import { icp } from "icpts";
 
 const identity = new THREE.Matrix4();
 
+const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 const DemoScene = () => {
     const [points, setPoints] = useState([] as number[][]);
     const [matrixSource, setMatrixSource] = useState<THREE.Matrix4>(identity);
@@ -25,7 +26,14 @@ const DemoScene = () => {
     const toggle = useRef(true);
     useControls("ICP", {
         ["Point to Point"]: button(async () => {
-            const mat = await icp.pointToPointICP(sourcePoints.current!, referencePoints.current!);
+            console.log(sourcePoints);
+            console.log(referencePoints);
+            // Needs to get world points for both
+            const mat = await icp.pointToPointICP(sourcePoints.current!, referencePoints.current!, {
+                maxIterations: 10,
+                tolerance: 1e-20,
+                initialPose: IDENTITY
+            });
             console.log(mat);
             // setMatrixSource(
             //     toggle.current
@@ -34,6 +42,8 @@ const DemoScene = () => {
             //               .makeRotationFromEuler(new THREE.Euler(Math.PI / 4, 0, 0))
             //               .invert()
             // );
+            // Already column major
+            // console.log(mat)
             setMatrixSource(new THREE.Matrix4().fromArray(mat));
             toggle.current = !toggle.current;
         })
@@ -48,7 +58,7 @@ const DemoScene = () => {
     };
 
     const getPoints = async () => {
-        const points = await parsePCDFile("./bunny.pcd");
+        const points = await parsePCDFile("./bun4.pcd");
         setPoints(points);
     };
 

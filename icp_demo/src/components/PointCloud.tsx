@@ -31,7 +31,6 @@ const getPointPositions = (points: THREE.Points) => {
 const getPointsInWorld = (points: THREE.Points) => {
     const worldMat = points.matrixWorld;
     const localPositions = getPointPositions(points);
-    //TODO: Don't create many arrays
     return new Float32Array(getWorldPositions(localPositions, worldMat));
 };
 
@@ -66,8 +65,8 @@ const PointCloud = ({
     useEffect(() => {
         if (pointCloud3JS.current) {
             pointCloud3JS.current.applyMatrix4(matrix);
-            const localPositions = getPointPositions(pointCloud3JS.current);
-            onTransformEnd(localPositions as Float32Array);
+            const worldPoints = getPointsInWorld(pointCloud3JS.current!);
+            onTransformEnd(worldPoints as Float32Array);
         }
     }, [pointCloud3JS, matrix, geometry]);
 

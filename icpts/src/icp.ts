@@ -1,15 +1,13 @@
 import eig from "eigen";
-import createKDTree from "static-kdtree";
 import { matrixHelpers } from "./matrixHelpers";
 import { chunkArray } from "./util";
-import { SVD } from "svd-js";
-
-type KDTree = ReturnType<typeof import("static-kdtree")>;
+import { kdTree } from "kd-tree-javascript";
 
 /**
  * ICP utilities
  */
 
+type Point = { x: number; y: number; z: number };
 export type ICPOptions = {
     initialPose: number[];
     maxIterations: number;
@@ -30,20 +28,22 @@ const createPointCloudMat = (points: Float32Array) => {
     return pointCloudMat;
 };
 
-// TODO: use get/set blocks
-const getCorrespondences = (sourceMat: eig.Matrix, reference: number[][], kdTree: KDTree) => {
+const getCorrespondences = (sourceMat: eig.Matrix, kdTree: kdTree<Point>) => {
     const correspondences = new eig.Matrix(3, sourceMat.cols());
 
+    let errorSum = 0;
     for (let i = 0; i < sourceMat.cols(); i++) {
         const point = matrixHelpers.matToFlat(sourceMat.block(0, i, 3, 1));
-        const correspondenceIdx = kdTree.nn(point);
+        const [[{ x, y, z }, dist]] = kdTree.nearest({ x: point[0], y: point[1], z: point[2] }, 1);
 
-        correspondences.set(0, i, reference[correspondenceIdx][0]);
-        correspondences.set(1, i, reference[correspondenceIdx][1]);
-        correspondences.set(2, i, reference[correspondenceIdx][2]);
+        errorSum += dist;
+
+        correspondences.set(0, i, x);
+        correspondences.set(1, i, y);
+        correspondences.set(2, i, z);
     }
 
-    return correspondences;
+    return { correspondences, error: errorSum / sourceMat.cols() };
 };
 
 const repeatVector = (vector: eig.Matrix, numColumns: number) => {
@@ -70,34 +70,24 @@ const computeOptimalTransform = (sourceMat: eig.Matrix, correspondences: eig.Mat
 
     const N = centeredSource.matMul(centeredCorrespondence.transpose());
 
-    // const Nflat = matrixHelpers.matToFlat(N);
-    // const { u, v } = SVD(chunkArray(Nflat, N.cols()) as number[][]);
-    const svd = eig.Decompositions.svd(N, true); // potential bug
+    const svd = eig.Decompositions.svd(N, false);
 
-    const U = svd.U; //new eig.Matrix(u);
-    const V = svd.V; //new eig.Matrix(v);
-
-    // console.log(U.rows(), U.cols());
-    // console.log(V.rows(), V.cols());
+    const U = svd.U;
+    const V = svd.V;
 
     let R = V.matMul(U.transpose());
 
-    // TODO: det lib, or get a different lib
-
-    // console.log(R.rows(), R.cols());
-    // console.log(centroidSource.rows(), centroidSource.cols());
-
     // Special reflection case
-    // if (R.det() < 0) {
-    //     // Change sign of third column
-    //     V.setBlock(0, 2, V.block(0, 2, 3, 1).mul(-1));
-    //     R = V.matMul(U.transpose());
-    // }
+    if (R.det() < 0) {
+        // Change sign of third column
+        V.setBlock(0, 2, V.block(0, 2, 3, 1).mul(-1));
+        R = V.matMul(U.transpose());
+    }
 
     const translation = centroidCorrespondences.matSub(R.matMul(centroidSource));
 
     // Create the affine transform
-    const transform = new eig.Matrix(4, 4);
+    const transform = eig.Matrix.identity(4, 4);
     transform.setBlock(0, 0, R);
     transform.setBlock(0, 3, translation);
 
@@ -110,34 +100,54 @@ const pointToPointICP = async (
     options: ICPOptions = { initialPose: IDENTITY, maxIterations: 250, tolerance: 1e-4 }
 ) => {
     await eig.ready;
-    const { initialPose, maxIterations, tolerance: _tol } = options;
+    const { initialPose, maxIterations, tolerance } = options;
 
     const sourceMat = createPointCloudMat(source);
     let transformation = matrixHelpers.fromArray(initialPose, 4);
 
-    const chunkedRef = chunkArray(reference, 3) as number[][];
-    const kdTree = createKDTree(chunkedRef);
+    const refPoints = chunkArray(reference, 3).map(
+        (point) =>
+            ({
+                x: point[0],
+                y: point[1],
+                z: point[2]
+            } as Point)
+    );
+    const dist = (a: Point, b: Point) =>
+        Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) + Math.pow(a.z - b.z, 2);
+    const tree = new kdTree(refPoints, dist, ["x", "y", "z"]);
 
     const sourceExtraRow = eig.Matrix.ones(sourceMat.rows() + 1, sourceMat.cols());
 
+    let prevError = Number.MAX_SAFE_INTEGER;
+    let times = 0;
     for (let iterCount = 0; iterCount < maxIterations; iterCount++) {
         sourceExtraRow.setBlock(0, 0, sourceMat);
         const transformedSource = transformation
             .matMul(sourceExtraRow)
             .block(0, 0, 3, sourceMat.cols());
-        const correspondences = getCorrespondences(transformedSource, chunkedRef, kdTree);
+        const { correspondences, error } = getCorrespondences(transformedSource, tree);
         const optimalTransform = computeOptimalTransform(transformedSource, correspondences);
         transformation = transformation.matMul(optimalTransform);
 
-        // eig.GC.pushException(sourceMat, transformation);
-        // eig.GC.flush();
+        if (Math.abs(prevError - error) < tolerance) {
+            transformedSource.block(0, 0, 3, 10).print("Source");
+            correspondences.block(0, 0, 3, 10).print("Correspondence");
+            if (++times > 10) {
+                break;
+            }
+        } else {
+            times = 0;
+            prevError = error;
+        }
+        eig.GC.pushException(sourceMat, transformation, sourceExtraRow);
+        eig.GC.flush();
     }
 
-    // TODO: implement tol, use a kdtree lib to get distances
-
+    transformation.print("transform");
     const flat = matrixHelpers.matToFlat(transformation);
-    // eig.GC.popException(transformation);
-    // eig.GC.flush();
+    eig.GC.popException(sourceMat, transformation, sourceExtraRow);
+    eig.GC.flush();
     return flat;
 };
 
