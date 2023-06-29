@@ -15,6 +15,11 @@ const fromArray = (flatMat: FlatArray<number>, ncols: number) => {
     return new eig.Matrix(byRows as unknown as number[]);
 };
 
+const fromArrayCol = (flatMat: FlatArray<number>, nrows: number) => {
+    const byCol = chunkArray(flatMat, nrows);
+    return new eig.Matrix(byCol as unknown as number[]).transpose();
+};
+
 const flatToVec3Mat = (flatMat: FlatArray<number>) => {
     // N
     const len = flatMat.length;
@@ -47,6 +52,7 @@ const flush = eig.GC.flush;
 
 export const matrixHelpers = {
     fromArray,
+    fromArrayCol,
     flatToVec3Mat,
     matToFlat,
     flush

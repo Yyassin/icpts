@@ -3,6 +3,9 @@ import { matrixHelpers } from "./matrixHelpers";
 import { chunkArray } from "./util";
 import { kdTree } from "kd-tree-javascript";
 
+// https://github.com/niosus/notebooks/blob/master/icp.ipynb
+// Try this too
+
 /**
  * ICP utilities
  */
@@ -15,7 +18,7 @@ export type ICPOptions = {
 };
 const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
-const createPointCloudMat = (points: Float32Array) => {
+export const createPointCloudMat = (points: Float32Array) => {
     const numPoints = points.length / 3;
     const pointCloudMat = new eig.Matrix(3, numPoints);
 
@@ -46,7 +49,7 @@ const getCorrespondences = (sourceMat: eig.Matrix, kdTree: kdTree<Point>) => {
     return { correspondences, error: errorSum / sourceMat.cols() };
 };
 
-const repeatVector = (vector: eig.Matrix, numColumns: number) => {
+export const repeatVector = (vector: eig.Matrix, numColumns: number) => {
     const repeatedMatrix = new eig.Matrix(vector.rows(), numColumns);
 
     for (let col = 0; col < numColumns; col++) {
