@@ -28,12 +28,12 @@ export const pca = async (points: FlatArray<number>) => {
 
     // Compute the SVD
     const svd = eig.Decompositions.svd(X, true);
-    const [V, sv] = [svd.V, svd.sv];
+    const [V] = [svd.V];
 
     // If X = USV^T then the columns of V are principle
     // directions (eigenvectors)
-    sv.print("sv");
-    V.print("V");
+    // sv.print("sv");
+    // V.print("V");
 
     // Singular values are sorted in decreasing order
     // so the smallest is always the last which
@@ -41,7 +41,7 @@ export const pca = async (points: FlatArray<number>) => {
     // points is given by the right most column in V
     const normal = V.block(0, 2, 3, 1);
     const normalFlat = matrixHelpers.matToFlat(normal);
-    eig.GC.flush();
+    // eig.GC.flush(); // TODO: don't put this in internal funcs since we'll delete outside
     return normalFlat;
 };
 

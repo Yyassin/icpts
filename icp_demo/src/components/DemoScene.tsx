@@ -29,8 +29,8 @@ const DemoScene = () => {
             console.log(sourcePoints);
             console.log(referencePoints);
             // Needs to get world points for both
-            const mat = await icp.pointToPointICP(sourcePoints.current!, referencePoints.current!, {
-                maxIterations: 10,
+            const mat = await icp.pointToPlane(sourcePoints.current!, referencePoints.current!, {
+                maxIterations: 100,
                 tolerance: 1e-20,
                 initialPose: IDENTITY
             });

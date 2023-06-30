@@ -10,13 +10,13 @@ import { kdTree } from "kd-tree-javascript";
  * ICP utilities
  */
 
-type Point = { x: number; y: number; z: number };
+export type Point = { x: number; y: number; z: number };
 export type ICPOptions = {
     initialPose: number[];
     maxIterations: number;
     tolerance: number;
 };
-const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+export const IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
 export const createPointCloudMat = (points: Float32Array) => {
     const numPoints = points.length / 3;
@@ -31,7 +31,7 @@ export const createPointCloudMat = (points: Float32Array) => {
     return pointCloudMat;
 };
 
-const getCorrespondences = (sourceMat: eig.Matrix, kdTree: kdTree<Point>) => {
+export const getCorrespondences = (sourceMat: eig.Matrix, kdTree: kdTree<Point>) => {
     const correspondences = new eig.Matrix(3, sourceMat.cols());
 
     let errorSum = 0;
