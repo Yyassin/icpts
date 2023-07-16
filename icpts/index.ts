@@ -1,9 +1,12 @@
-import { matrixHelpers } from "./src/matrixHelpers";
-import { icp as pointICP } from "./src/icp";
-import { icp as planeICP } from "./src/pointToPlane";
+import eig from "eigen";
+import { pointToPlane, pointToPoint } from "./src/icp";
+import { Mat } from "./src/math";
 
-const icp = { pointToPoint: pointICP.pointToPointICP, pointToPlane: planeICP.pointToPlaneICP };
+const icpts = {
+    pointToPoint,
+    pointToPlane,
+    ready: eig.ready,
+    Mat
+};
 
-export { matrixHelpers, icp };
-
-// ncc build index.ts -o dist --target es2017
+export default icpts;

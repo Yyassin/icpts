@@ -1,0 +1,13 @@
+{
+  "name": "icpts",
+  "description": "A demo application demonstrating iterative closest point",
+  "devDependencies": {
+    "prettier": "^2.6.2",
+    "turbo": "^1.2.9"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test"
+  }
+}

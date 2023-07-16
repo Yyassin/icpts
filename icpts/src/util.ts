@@ -1,9 +1,10 @@
 /**
  * General utility functions
- * (because I don't want to pull lodash :))
+ * (because I don't need all of lodash :))
+ * @author Yousef Yassin
  */
 
-import { FlatArray } from "./types";
+import { FlatMat } from "./types";
 
 /**
  * Creates chunks of size n with the elements
@@ -13,9 +14,9 @@ import { FlatArray } from "./types";
  * @param n The chunk size.
  * @returns The array of chunks.
  */
-const chunkArray = <T>(array: FlatArray<T>, n: number) => {
+const chunkArray = <T>(array: FlatMat<T>, n: number) => {
     const length = array.length;
-    const result = new Array<FlatArray<T>>(Math.ceil(length / n));
+    const result = new Array<FlatMat<T>>(Math.ceil(length / n));
 
     let index = 0;
     let chunkIndex = 0;
