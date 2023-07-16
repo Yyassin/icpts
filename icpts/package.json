@@ -1,6 +1,6 @@
 {
     "name": "icpts",
-    "version": "0.3.0",
+    "version": "0.5.0",
     "description": "TypeScript based library for iterative closest point (icp).",
     "type": "commonjs",
     "main": "dist/index.js",
@@ -14,14 +14,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Yyassin/icpjs.git"
+        "url": "git+https://github.com/Yyassin/icpts.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Yyassin/icpjs/issues"
+        "url": "https://github.com/Yyassin/icpts/issues"
     },
-    "homepage": "https://github.com/Yyassin/icpjs#readme",
+    "homepage": "https://github.com/Yyassin/icpts#readme",
     "dependencies": {
         "build": "^0.1.4",
         "eigen": "^0.2.2",
