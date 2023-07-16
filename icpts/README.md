@@ -1,5 +1,5 @@
 # icp-ts
-> A Typescript implementation of the iterative closest point algorithm using both the point-to-point and point-to-plane variants. An example of usage is shown in the provided React Three Fiber demo; you can visit the demo [here]();
+> A Typescript implementation of the iterative closest point algorithm using both the point-to-point and point-to-plane variants. An example of usage is shown in the provided React Three Fiber demo; you can visit the demo [here](https://icpts-web.vercel.app/)
 
 # Installation
 - Simply install the npm package with the command below

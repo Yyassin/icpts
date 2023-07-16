@@ -78,7 +78,7 @@ const DemoScene = () => {
 
       setMatrixSource(transform);
       setTransformIdx(idx);
-    }, 200); // 500 should be bound to slider
+    }, 50);
 
     return () => {
       if (runIntervalId.current) {
