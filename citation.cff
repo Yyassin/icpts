@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: 'If you use this software, please cite it as below.'
+authors:
+  - family-names: 'Yassin'
+    given-names: 'Yousef'
+title: 'icpts'
+version: 0.5.0
+date-released: 2023-07-15
+url: 'https://github.com/Yyassin/icpts'
