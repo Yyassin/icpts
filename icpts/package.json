@@ -1,6 +1,6 @@
 {
     "name": "icpts",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "description": "TypeScript based library for iterative closest point (icp).",
     "type": "commonjs",
     "main": "dist/index.js",
