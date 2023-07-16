@@ -9,7 +9,8 @@ $ npm install icpts
 
 # Usage
 First import the package.
-```
+
+```typescript
 import icpts from "icpts"
 ```
 
@@ -17,7 +18,7 @@ We expose both ICP strategies using seperate functions under the names `icpts.po
 
 Each strategy returns the optimal transform from the source cloud to the reference, stored in a flat array using column major ordering. The final error is also returned. Assuming `source` and `reference` are defined:
 
-```
+```typescript
 import icpts from "icpts"
 
 const options = {
@@ -29,7 +30,7 @@ const options = {
 const { transform, error } = icpts.pointToPoint(source, reference, options); // or icpts.pointToPlane
 ```
 
-You may refer to more detailed example usage in `icpts-demo` or in the `icpts` tests, specifically [`icpts.test.ts`]();
+You may refer to more detailed example usage in `icpts-demo` or in the `icpts` tests, specifically [`icpts.test.ts`](https://github.com/Yyassin/icpts/blob/master/icpts/test/icp.test.ts);
 
 # Why does this exist
 Good question, it probably shouldn't (and I wouldn't recommend using it for anything half serious). To answer the question though, no one was brave enough to publish an ICP library using JavaScript/TypeScript (for good reason) so we decided why not. We also tried to make it somewhat readable.
@@ -39,4 +40,4 @@ Good question, it probably shouldn't (and I wouldn't recommend using it for anyt
 
 # References
 - [1] [Point to Plane](https://www.comp.nus.edu.sg/~lowkl/publications/lowk_point-to-plane_icp_techrep.pdf)
-- [2] [Point to Point]()
+- [2] [Point to Point](https://github.com/Yyassin/icpts/blob/master/PAMI-3DLS-1987.pdf)
