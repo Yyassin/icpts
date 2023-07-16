@@ -63,7 +63,7 @@ const PointCloud = ({
       );
       onTransformEnd(worldPoints);
     }
-  }, [pointCloud3JS, matrix, geometry]);
+  }, [pointCloud3JS, matrix, geometry, onTransformEnd]);
 
   return (
     <PivotControls

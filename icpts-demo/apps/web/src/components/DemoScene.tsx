@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Perf } from 'r3f-perf';
+// import { Perf } from 'r3f-perf';
 import { OrbitControls, Stage } from '@react-three/drei';
 import Grid from './Grid';
 import { parsePCDFile } from 'util/pcdUtil';
@@ -33,22 +33,22 @@ const DemoScene = () => {
   const referencePoints = useRef<number[]>();
   const runIntervalId = useRef<NodeJS.Timeout>();
 
-  const getPoints = async () => {
+  const getPoints = useCallback(async () => {
     const points = await parsePCDFile('./pcd/bun4.pcd');
     setPoints(points);
-  };
+  }, [setPoints]);
 
-  const initializeScene = () => {
+  const initializeScene = useCallback(() => {
     const sourceMat = new THREE.Matrix4();
     const referenceMat = new THREE.Matrix4();
     setMatrixSource(sourceMat);
     setMatrixReference(referenceMat);
     getPoints();
-  };
+  }, [setMatrixSource, setMatrixReference, getPoints]);
 
   useEffect(() => {
     initializeScene();
-  }, []);
+  }, [initializeScene]);
 
   useEffect(() => {
     if (!running) {
@@ -86,7 +86,7 @@ const DemoScene = () => {
         runIntervalId.current = null;
       }
     };
-  }, [running, transformIdx, transforms.current, runDirection]);
+  }, [running, transformIdx, runDirection]);
 
   const { maxIterations, tolerance } = useControls(
     'ICP',
@@ -161,14 +161,16 @@ const DemoScene = () => {
     [strategy, transformIdx, running],
   );
 
-  const onTransformEnd =
+  const onTransformEnd = useCallback(
     (type: 'source' | 'reference') => (worldPose: number[]) => {
       if (type === 'source') {
         sourcePoints.current = worldPose;
       } else {
         referencePoints.current = worldPose;
       }
-    };
+    },
+    [],
+  );
 
   return (
     <>

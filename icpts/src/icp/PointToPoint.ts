@@ -95,12 +95,12 @@ class PointToPoint implements ICPStrategy {
         // First, we center both clouds by their centroids. We compute
         // the means by summing across columns and dividing by the number
         // of columns. This is done using matrix multiplication below
-        const vec1 = new eig.Matrix(new Array(sourceMat.cols()).fill(1));
+        const vecOnes = new eig.Matrix(new Array(sourceMat.cols()).fill(1));
         const npoints = sourceMat.cols();
 
         // Compute centroids
-        const centroidSource = sourceMat.matMul(vec1).div(npoints);
-        const centroidCorrespondences = correspondences.matMul(vec1).div(npoints);
+        const centroidSource = sourceMat.matMul(vecOnes).div(npoints);
+        const centroidCorrespondences = correspondences.matMul(vecOnes).div(npoints);
 
         // Center the source and correspondence cloud
         const centeredSource = sourceMat.matSub(Mat.repeatVector(centroidSource, npoints));

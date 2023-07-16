@@ -9,7 +9,7 @@ import { Mat } from "./Mat";
  * an estimate of the surface normal. We do this by assuming
  * a plane and computing the principal axis (eigenvector)
  * that corresponds to the direction of least variance.
- * @param points The points on the surface to estiamte a normal for.
+ * @param points The points on the surface to estimate a normal for.
  * @returns The estimated normal
  */
 const estimateNormal = (points: FlatMat<number>) => {
