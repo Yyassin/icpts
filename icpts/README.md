@@ -48,6 +48,7 @@ Good question, it probably shouldn't (and I wouldn't recommend using it for anyt
 
 ## Limitations
 - Please note that there are limitations on the point cloud sizes due to the usage of wasm (with [`eigen-js`](https://github.com/BertrandBev/eigen-js)) and the associated limitation on memory.
+- Also due to the eigen dependency, the package is not fully supported in browser environments (and it certainly won't work in a web worker, so you wouldn't want to use it in a browser anyway). You can, however, easily use it on any node-based server, including Next JS server-side APIs.
 - We are not using any robust variants of ICP, so successful point cloud registration requires decent initialization with some overlap between the clouds. Nevertheless, it seems like point-to-point seems to be more robust to the initial pose but converges more slowly than point-to-plane.
 
 ## TODO
