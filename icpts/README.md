@@ -46,6 +46,10 @@ To run the demo site, navigate to the root of the repo and run `pnpm install` to
 ## Why does this exist?
 Good question, it probably shouldn't (and I wouldn't recommend using it for anything half serious). To answer the question though, no one was brave enough to publish an ICP library using JavaScript/TypeScript (for good reason) so we decided why not? We also tried to make it *somewhat* readable.
 
+## Limitations
+- Please note that there are limitations on the point cloud sizes due to the usage of wasm (with [`eigen-js`](https://github.com/BertrandBev/eigen-js)) and the associated limitation on memory.
+- We are not using any robust variants of ICP, so successful point cloud registration requires decent initialization with some overlap between the clouds. Nevertheless, it seems like point-to-point seems to be more robust to the initial pose but converges more slowly than point-to-plane.
+
 ## TODO
 - [ ] Generalized ICP
 - [ ] Consider adding more tests.
